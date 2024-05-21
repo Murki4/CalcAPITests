@@ -4,16 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79ac0e19-1918-453a-9b63-a0ac09cfb83b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/AuthorizationTests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/PojoClasses/AuthorizationData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/SpecificationPackage/Specifications.java" afterDir="false" />
+    <list default="true" id="79ac0e19-1918-453a-9b63-a0ac09cfb83b" name="Changes" comment="Base">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/GetOperatorTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/PostTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/PojoClasses/ResultData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/allure.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/AuthorizationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/AuthorizationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/PojoClasses/AuthorizationData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/SpecificationPackage/Specifications.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/SpecificationPackage/Specifications.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,9 +46,76 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false"
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/projects/CalcAPITests/src/test/java",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\projects\CalcAPITests\src\test\java" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.AuthorizationTests.AuthorizationPositive">
+    <configuration name="AuthorizationTests.AuthorizationNegative401" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="CalcAPITests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ApiTestsPackage.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="ApiTestsPackage" />
+      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.AuthorizationTests" />
+      <option name="METHOD_NAME" value="AuthorizationNegative401" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthorizationTests.AuthorizationNegative403" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="CalcAPITests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ApiTestsPackage.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="ApiTestsPackage" />
+      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.AuthorizationTests" />
+      <option name="METHOD_NAME" value="AuthorizationNegative403" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthorizationTests.AuthorizationPositive" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="CalcAPITests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ApiTestsPackage.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="ApiTestsPackage" />
+      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.AuthorizationTests" />
+      <option name="METHOD_NAME" value="AuthorizationPositive" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.AuthorizationTests.AuthorizationPositive" />
+        <item itemvalue="JUnit.AuthorizationTests.AuthorizationNegative403" />
+        <item itemvalue="JUnit.AuthorizationTests.AuthorizationNegative401" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -55,8 +124,16 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1716285134203</updated>
-      <workItem from="1716285135527" duration="5524000" />
+      <workItem from="1716285135527" duration="15788000" />
     </task>
+    <task id="LOCAL-00001" summary="Base">
+      <created>1716290849201</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1716290849201</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -72,5 +149,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Base" />
+    <option name="LAST_COMMIT_MESSAGE" value="Base" />
   </component>
 </project>
