@@ -5,9 +5,9 @@ public class ResultData {
     private String number_1;
     private String number_2;
     private String operator;
-    private Double result;
+    private String result;
 
-    public ResultData(Integer pk, String number_1, String number_2, String operator, Double result) {
+    public ResultData(Integer pk, String number_1, String number_2, String operator, String  result) {
         this.pk = pk;
         this.number_1 = number_1;
         this.number_2 = number_2;
@@ -34,7 +34,7 @@ public class ResultData {
         return operator;
     }
 
-    public Double getResult() {
+    public String getResult() {
         return result;
     }
 }

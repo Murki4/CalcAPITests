@@ -5,16 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79ac0e19-1918-453a-9b63-a0ac09cfb83b" name="Changes" comment="Base">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/GetOperatorTests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/PostTests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/PojoClasses/ResultData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/allure.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/DeleteTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/IdTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/UnspecifiedTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/JSONFiles/CustomMinusPostBody.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/JSONFiles/CustomPlusPostBody.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/PojoClasses/PostRequestBody.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/AuthorizationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/AuthorizationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/PojoClasses/AuthorizationData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/PostTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/PostTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/PojoClasses/ResultData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/PojoClasses/ResultData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/SpecificationPackage/Specifications.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/SpecificationPackage/Specifications.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -25,11 +26,18 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="JavaScript File" />
+        <option value="package.json" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -47,20 +55,21 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/projects/CalcAPITests/src/test/java",
+    "last_opened_file_path": "Q:/projects/CalcAPITests/src/test/java/JSONFiles",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
+    "project.structure.last.edited": "SDKs",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="Q:\projects\CalcAPITests\src\test\java\JSONFiles" />
       <recent name="D:\projects\CalcAPITests\src\test\java" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AuthorizationTests.AuthorizationPositive">
-    <configuration name="AuthorizationTests.AuthorizationNegative401" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.PostTests.PostDivide">
+    <configuration name="PostTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="CalcAPITests" />
       <extension name="coverage">
         <pattern>
@@ -69,14 +78,29 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="ApiTestsPackage" />
-      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.AuthorizationTests" />
-      <option name="METHOD_NAME" value="AuthorizationNegative401" />
+      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.PostTests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PostTests.PostDivide" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="CalcAPITests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ApiTestsPackage.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="ApiTestsPackage" />
+      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.PostTests" />
+      <option name="METHOD_NAME" value="PostDivide" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AuthorizationTests.AuthorizationNegative403" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="PostTests.PostDivideDoubleTrim" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="CalcAPITests" />
       <extension name="coverage">
         <pattern>
@@ -85,14 +109,14 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="ApiTestsPackage" />
-      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.AuthorizationTests" />
-      <option name="METHOD_NAME" value="AuthorizationNegative403" />
+      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.PostTests" />
+      <option name="METHOD_NAME" value="PostDivideDoubleTrim" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AuthorizationTests.AuthorizationPositive" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="PostTests.PostDivideNegativeNumbers" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="CalcAPITests" />
       <extension name="coverage">
         <pattern>
@@ -101,18 +125,47 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="ApiTestsPackage" />
-      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.AuthorizationTests" />
-      <option name="METHOD_NAME" value="AuthorizationPositive" />
+      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.PostTests" />
+      <option name="METHOD_NAME" value="PostDivideNegativeNumbers" />
       <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PostTests.PostEqual" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="CalcAPITests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ApiTestsPackage.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="ApiTestsPackage" />
+      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.PostTests" />
+      <option name="METHOD_NAME" value="PostEqual" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.AuthorizationTests.AuthorizationPositive" />
-        <item itemvalue="JUnit.AuthorizationTests.AuthorizationNegative403" />
-        <item itemvalue="JUnit.AuthorizationTests.AuthorizationNegative401" />
+        <item itemvalue="JUnit.PostTests.PostDivide" />
+        <item itemvalue="JUnit.PostTests.PostDivideNegativeNumbers" />
+        <item itemvalue="JUnit.PostTests.PostDivideDoubleTrim" />
+        <item itemvalue="JUnit.PostTests.PostEqual" />
+        <item itemvalue="JUnit.PostTests" />
       </list>
     </recent_temporary>
   </component>
@@ -125,6 +178,8 @@
       <option name="presentableId" value="Default" />
       <updated>1716285134203</updated>
       <workItem from="1716285135527" duration="15788000" />
+      <workItem from="1716336546635" duration="136000" />
+      <workItem from="1716336692504" duration="24376000" />
     </task>
     <task id="LOCAL-00001" summary="Base">
       <created>1716290849201</created>
