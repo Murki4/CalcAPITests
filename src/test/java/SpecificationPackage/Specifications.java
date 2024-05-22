@@ -9,7 +9,7 @@ import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 
 public class Specifications{
-    private static String uri = "https://calc.sintetika.keenetic.pro/api/";
+    private static final String uri = "https://calc.sintetika.keenetic.pro/api/";
 
     public static RequestSpecification requestSpec(){
         return new RequestSpecBuilder()
