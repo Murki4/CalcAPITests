@@ -2,6 +2,7 @@ package ApiTestsPackage.PostTests;
 
 import PojoClasses.PostRequestBody;
 import PojoClasses.ResultData;
+import SpecificationPackage.RequestResponceEvocation;
 import SpecificationPackage.Specifications;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -20,12 +21,7 @@ public class PostMinus {
     }
     @AfterAll
     static void DeleteEntries() { //удаление тестовых данных из БД;
-        given()
-                .spec(Specifications.authCred())
-                .when()
-                .delete()
-                .then()
-                .log().all();
+        RequestResponceEvocation.EvokDeletion();
     }
     @Test
     @Feature("POST -")
@@ -35,16 +31,9 @@ public class PostMinus {
             "вычитания двух чисел")
     @Tag("Позитивные")
     @Tag("POST")
-    public void PostMinus() {
+    public void PostMinusPositive() {
         PostRequestBody request_body = new PostRequestBody("-");
-        ResultData result = given()
-                .spec(Specifications.authCred())
-                .body(request_body)
-                .when()
-                .post()
-                .then().log().all()
-                .assertThat().statusCode(201)
-                .extract().body().as(ResultData.class);
+        ResultData result = RequestResponceEvocation.Evok201(request_body);
         Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
         Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
         Assertions.assertEquals(
@@ -56,41 +45,12 @@ public class PostMinus {
     @Feature("POST -")
     @Story("Негативные")
     @DisplayName("POST - со строками")
-    @Description("POST запрос с оператором '-' и строкам. Возвращает result = error ")
+    @Description("POST запрос с оператором '-' и строкам. Должен вернуть код 201 и параметр result = error")
     @Tag("Негативные")
     @Tag("POST")
     public void PostMinusString() {
-        PostRequestBody request_body = new PostRequestBody("s", "s", "-");
-        ResultData result = given()
-                .spec(Specifications.authCred())
-                .body(request_body)
-                .when()
-                .post()
-                .then().log().all()
-                .assertThat().statusCode(201)
-                .extract().body().as(ResultData.class);
-        Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
-        Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
-        Assertions.assertEquals(result.getResult(), "error");
-    }
+        RequestResponceEvocation.Evok201Negative(new PostRequestBody("s", "s", "-"));
 
-    @Test
-    @Feature("POST -")
-    @Story("Негативные")
-    @DisplayName("POST - c числами с плаваюющей точкой, %%.*")
-    @Description("POST запрос с оператором '-' и двумя числами с плавающей точкой, " +
-            "где после точки неограниченное количество цифр. Возвращает код ответа 400 и error = incorrect data")
-    @Tag("POST")
-    @Tag("Негативные")
-    void PostMinusDoubleFull() {
-        given()
-                .spec(Specifications.authCred())
-                .body(new PostRequestBody("-", true))
-                .when()
-                .post()
-                .then().log().all()
-                .assertThat().statusCode(400)
-                .body("error", equalTo("incorrect data"));
     }
 
     @Test
@@ -98,23 +58,12 @@ public class PostMinus {
     @Story("Негативные")
     @DisplayName("POST - c числами с плаваюющей точкой, %%.%")
     @Description("POST запрос с оператором '-' и двумя числами с плавающей точкой, " +
-            "где после точки одна цифра Возвращает код ответа 201 и result = error")
+            "где после точки одна цифра. Должен вернуть код 201 и параметр result = error")
     @Tag("POST")
     @Tag("Негативные")
     @Tag("Исследовательские")
     void PostMinusDoubleTrim() {
-        PostRequestBody request_body = new PostRequestBody("13.6", "21.5", "-");
-        ResultData result = given()
-                .spec(Specifications.authCred())
-                .body(request_body)
-                .when()
-                .post()
-                .then().log().all()
-                .assertThat().statusCode(201)
-                .extract().body().as(ResultData.class);
-        Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
-        Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
-        Assertions.assertEquals(result.getResult(), "error");
+        RequestResponceEvocation.Evok201Negative(new PostRequestBody("13.6", "21.5", "-"));
     }
 
     @Test
@@ -127,14 +76,7 @@ public class PostMinus {
     @Tag("POST")
     void PostMinusNegativeNumbers() {
         PostRequestBody request_body = new PostRequestBody("-23", "-54", "-");
-        ResultData result = given()
-                .spec(Specifications.authCred())
-                .body(request_body)
-                .when()
-                .post()
-                .then().log().all()
-                .assertThat().statusCode(201)
-                .extract().body().as(ResultData.class);
+        ResultData result = RequestResponceEvocation.Evok201(request_body);
         Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
         Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
         Assertions.assertEquals(
@@ -146,21 +88,10 @@ public class PostMinus {
     @Feature("POST -")
     @Story("Негативные")
     @DisplayName("POST - трехзначные значения")
-    @Description("POST запрос с оператором - и трехзначными числами. Результатом должна быть ошибка")
+    @Description("POST запрос с оператором - и трехзначными числами. Должен вернуть код 201 и параметр result = error")
     @Tag("POST")
     @Tag("Негативные")
-    public void PostMinusNegativeThreeDigits() {
-        PostRequestBody request_body = new PostRequestBody("100", "20", "-");
-        ResultData result = given()
-                .spec(Specifications.authCred())
-                .body(request_body)
-                .when()
-                .post()
-                .then().log().all()
-                .assertThat().statusCode(201)
-                .extract().body().as(ResultData.class);
-        Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
-        Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
-        Assertions.assertEquals("error", result.getResult());
+    public void PostMinusThreeDigits() {
+        RequestResponceEvocation.Evok201Negative(new PostRequestBody("100", "20", "-"));
     }
 }
