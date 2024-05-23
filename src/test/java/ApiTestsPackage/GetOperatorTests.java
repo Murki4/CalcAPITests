@@ -5,6 +5,7 @@ import PojoClasses.ResultData;
 import SpecificationPackage.Specifications;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -17,7 +18,7 @@ import static io.restassured.RestAssured.given;
 @DisplayName("GET запросы с параметром operator")
 public class GetOperatorTests {
     @BeforeAll
-    static void InstallSpec(){ //установка стандартных спецификаций и создание набора данных для теста
+    static void InstallSpecAndMakeEntries(){ //установка стандартных спецификаций и создание набора данных для теста
         Specifications.Install(Specifications.requestSpec());
         String[] opers = {"+","-","*","/","="};
         for (String oper : opers)
@@ -41,9 +42,10 @@ public class GetOperatorTests {
     }
 
     @Test
+    @Feature("Позитивные")
     @DisplayName("GET operator")
     @Description("GET запрос с параметром operators. Возвращает список всех совершенных операций пользователя")
-    @Tag("Положительные")
+    @Tag("Позитивные")
     @Tag("GET")
     public void OperatorsAll(){
         List<ResultData> entries = given()
@@ -58,10 +60,11 @@ public class GetOperatorTests {
     }
 
     @ParameterizedTest
+    @Feature("Позитивные")
     @ValueSource(strings = {"+","-","*","/","%3D"})
     @DisplayName("GET operator parametrized")
     @Description("GET запрос с параметром operators и одним из операторов(+, -, *, /, =)")
-    @Tag("Положительные")
+    @Tag("Позитивные")
     @Tag("GET")
     public void OperatorsSome(String oper){
         List<ResultData> entries = given()
@@ -80,6 +83,7 @@ public class GetOperatorTests {
         }
     }
     @Test
+    @Feature("Негативные")
     @DisplayName("GET operators негативный")
     @Description("GET запрос с параметром operators и неподдерживаемым оператором. Возвращает ошибку")
     @Tag("Негативные")
@@ -92,7 +96,5 @@ public class GetOperatorTests {
                 .then().log().all()
                 .statusCode(400)
                 .body("error", equalTo("not supported operator"));
-
     }
-
 }
