@@ -37,8 +37,7 @@ public class BodyFormatTests {
     @Tag("POST")
     public void PostMixedBody() {
         File json = new File("./src/test/java/JSONFiles/MixedBody.json");
-        RequestResponceEvocation<File> req201 = new <File>RequestResponceEvocation();
-        ResultData result = req201.Evoc201(json);
+        ResultData result = RequestResponceEvocation.Evok201(json);
         try {
             Assertions.assertEquals(JsonPath.read(json, "number_1"), result.getNumber_1());
             Assertions.assertEquals(JsonPath.read(json, "number_2"), result.getNumber_2());
@@ -60,9 +59,7 @@ public class BodyFormatTests {
     @Tag("Исследовательские")
     @Tag("POST")
     public void PostUpperBody() {
-        File json = new File("./src/test/java/JSONFiles/UpperBody.json");
-        RequestResponceEvocation<File> req400 = new <File>RequestResponceEvocation();
-        req400.Evoc400(json);
+        RequestResponceEvocation.Evok400(new File("./src/test/java/JSONFiles/UpperBody.json"));
     }
     @Test
     @Feature("Негативные")
@@ -72,25 +69,16 @@ public class BodyFormatTests {
     @Tag("Негативные")
     @Tag("POST")
     public void PostGarbageData() {
-        File json = new File("./src/test/java/JSONFiles/GarbageBody.json");
-        RequestResponceEvocation<File> req400 = new <File>RequestResponceEvocation();
-        req400.Evoc400(json);
+        RequestResponceEvocation.Evok400(new File("./src/test/java/JSONFiles/GarbageBody.json"));
     }
     @Test
     @Feature("Негативные")
-    @DisplayName("BODY garbage data")
+    @DisplayName("BODY additional param")
     @Description("POST запрос с оператором '+', в теле запроса содержится лишний параметр" +
             "В целях соблюдения правильности запроса должен вернуть код 400")
     @Tag("Негативные")
     @Tag("POST")
     public void PostAdditionalParam() {
-        File json = new File("./src/test/java/JSONFiles/AddParamBody.json");
-        given()
-                .spec(Specifications.authCred())
-                .body(json)
-                .when()
-                .post()
-                .then().log().all()
-                .assertThat().statusCode(400);
+        RequestResponceEvocation.Evok400(new File("./src/test/java/JSONFiles/AddParamBody.json"));
     }
 }

@@ -2,6 +2,7 @@ package ApiTestsPackage.PostTests;
 
 import PojoClasses.PostRequestBody;
 import PojoClasses.ResultData;
+import SpecificationPackage.RequestResponceEvocation;
 import SpecificationPackage.Specifications;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
@@ -18,12 +19,7 @@ public class PostEqual {
     }
     @AfterAll
     static void DeleteEntries() { //удаление тестовых данных из БД;
-        given()
-                .spec(Specifications.authCred())
-                .when()
-                .delete()
-                .then()
-                .log().all();
+        RequestResponceEvocation.EvokDeletion();
     }
     @Test
     @Feature("POST =")
@@ -34,16 +30,9 @@ public class PostEqual {
     @Tag("POST")
     public void PostEqualTrue() {
         PostRequestBody request_body = new PostRequestBody("50", "50", "=");
-        ResultData result = given()
-                .spec(Specifications.authCred())
-                .body(request_body)
-                .when()
-                .post()
-                .then().log().all()
-                .assertThat().statusCode(201)
-                .extract().body().as(ResultData.class);
+        ResultData result = RequestResponceEvocation.Evok201(request_body);
         String body_bool = Boolean.toString(Double.parseDouble(request_body.getNumber_1()) == Double.parseDouble(request_body.getNumber_2()));
-        body_bool = body_bool.substring(0, 1).toUpperCase() + body_bool.substring(1);
+        body_bool = body_bool.substring(0, 1).toUpperCase() + body_bool.substring(1); // в ответе True/False с большой буквы >_<
         Assertions.assertEquals(
                 body_bool,
                 result.getResult());
@@ -58,14 +47,7 @@ public class PostEqual {
     @Tag("POST")
     public void PostEqualFalse() {
         PostRequestBody request_body = new PostRequestBody("50", "20", "=");
-        ResultData result = given()
-                .spec(Specifications.authCred())
-                .body(request_body)
-                .when()
-                .post()
-                .then().log().all()
-                .assertThat().statusCode(201)
-                .extract().body().as(ResultData.class);
+        ResultData result = RequestResponceEvocation.Evok201(request_body);
         String body_bool = Boolean.toString(Double.parseDouble(request_body.getNumber_1()) == Double.parseDouble(request_body.getNumber_2()));
         body_bool = body_bool.substring(0, 1).toUpperCase() + body_bool.substring(1);
         Assertions.assertEquals(
@@ -77,22 +59,11 @@ public class PostEqual {
     @Feature("POST =")
     @Story("Негативные")
     @DisplayName("POST = со строками")
-    @Description("POST запрос с оператором '=' и строкам. Возвращает result = error ")
+    @Description("POST запрос с оператором '=' и строкам. Должен вернуть ошибку и код 400 ")
     @Tag("Негативные")
     @Tag("POST")
     public void PostEqualString() {
-        PostRequestBody request_body = new PostRequestBody("s", "s", "=");
-        ResultData result = given()
-                .spec(Specifications.authCred())
-                .body(request_body)
-                .when()
-                .post()
-                .then().log().all()
-                .assertThat().statusCode(201)
-                .extract().body().as(ResultData.class);
-        Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
-        Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
-        Assertions.assertEquals(result.getResult(), "error");
+        RequestResponceEvocation.Evok400(new PostRequestBody("s", "s", "="));
     }
 
     @Test
@@ -100,18 +71,11 @@ public class PostEqual {
     @Story("Негативные")
     @DisplayName("POST = c числами с плаваюющей точкой, %%.*")
     @Description("POST запрос с оператором '=' и двумя числами с плавающей точкой, " +
-            "где после точки неограниченное количество цифр. Возвращает код ответа 400 и error = incorrect data")
+            "где после точки неограниченное количество цифр. Должен вернуть ошибку и код 400")
     @Tag("POST")
     @Tag("Негативные")
     void PostEqualDoubleFull() {
-        given()
-                .spec(Specifications.authCred())
-                .body(new PostRequestBody("=", true))
-                .when()
-                .post()
-                .then().log().all()
-                .assertThat().statusCode(400)
-                .body("error", equalTo("incorrect data"));
+        RequestResponceEvocation.Evok400(new PostRequestBody("=", true));
     }
 
     @Test
@@ -119,7 +83,7 @@ public class PostEqual {
     @Story("Негативные")
     @DisplayName("POST = c числами с плаваюющей точкой, %%.%")
     @Description("POST запрос с оператором '=' и двумя числами с плавающей точкой, " +
-            "где после точки одна цифра. Возвращает код ответа 201 и result = error")
+            "где после точки одна цифра. Должен вернуть ошибку и код 400")
     @Tag("POST")
     @Tag("Негативные")
     @Tag("Исследовательские")
