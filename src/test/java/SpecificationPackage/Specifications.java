@@ -5,6 +5,7 @@ import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.Tag;
 
 
 public class Specifications{
@@ -24,5 +25,4 @@ public class Specifications{
     public static RequestSpecification authCred(){
         return RestAssured.given().auth().preemptive().basic("sys0b1_5", "ymJ-q7z-7N2-SZz");
     }
-
 }

@@ -18,20 +18,23 @@ public class AuthorizationTests {
     }
 
     @Test
+    @Feature("Позитивный")
     @DisplayName("Авторизация позитивный")
     @Description("GET запрос с валидной парой логин_пароль. Использует отправку до запроса данных сервера. " +
             "Возвращает код ответа 200")
     @Tag("Порзитивный")
     @Tag("GET")
     public void AuthorizationPositive(){
-            given()
+        given()
                 .spec(Specifications.authCred())
                 .when()
                 .get()
                 .then()
-                .log().all();
+                .log().all()
+                .assertThat().statusCode(200);
     }
     @Test
+    @Feature("Негативный")
     @DisplayName("Авторизация негативный. Неправильные данные")
     @Description("GET запрос с несуществующей парой логин_пароль. Возвращает код 403 и сообщение Invalid username/password.")
     @Tag("Негативные")
@@ -47,6 +50,7 @@ public class AuthorizationTests {
                         .assertThat().body("detail", equalTo("Invalid username/password."));
     }
     @Test
+    @Feature("Негативный")
     @DisplayName("Авторизация негативный. Отсутствуют данные")
     @Description("GET запрос без пары логин_пароль. Возвращает код 403 и сообщение Authentication credentials were not provided.")
     @Tag("Негативные")
