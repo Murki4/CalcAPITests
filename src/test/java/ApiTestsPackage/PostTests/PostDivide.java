@@ -5,10 +5,13 @@ import PojoClasses.ResultData;
 import SpecificationPackage.RequestResponceEvocation;
 import SpecificationPackage.Specifications;
 import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.*;
 
+@Epic("POST запросы")
+@DisplayName("POST /")
 public class PostDivide {
     @BeforeAll
     static void InstallSpec(){ //стандартные спецификации
@@ -32,19 +35,16 @@ public class PostDivide {
         try { //механизм пропуска получения кол-ва знаков после запятой, если результат будет без знака точки
             String[] splitter = String.valueOf(result.getResult()).split("\\.");
             int i = splitter[1].length();
-            Assertions.assertEquals(4, i); //кол-во знаков после запятой
+            Assertions.assertEquals(4, i); //проверка кол-ва знаков после запятой у ответа API
+            String formattedDouble = String.format("%.4f", //приведение верного ответа к нужной форме
+                    Double.parseDouble(request_body.getNumber_1())
+                            / Double.parseDouble(request_body.getNumber_2())).replace(',', '.');
             Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
             Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
-            Assertions.assertEquals(
-                    Double.toString(Double.parseDouble(request_body.getNumber_1()) / Double.parseDouble(request_body.getNumber_2())),
-                    result.getResult());
+            Assertions.assertEquals(formattedDouble, result.getResult());
         }
         catch (ArrayIndexOutOfBoundsException e){
-            Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
-            Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
-            Assertions.assertEquals(
-                    Double.toString(Double.parseDouble(request_body.getNumber_1()) / Double.parseDouble(request_body.getNumber_2())),
-                    result.getResult());
+            Assertions.fail("Строка result содержит "+result.getResult());
         }
     }
 
@@ -72,22 +72,19 @@ public class PostDivide {
     void PostDivideNegativeNumbers() {
         PostRequestBody request_body = new PostRequestBody("-49", "-6", "/");
         ResultData result = RequestResponceEvocation.Evok201(request_body);
-        try { //механизм пропуска получения кол-ва знаков после запятой, если результат будет без знака точки
+        try { //механизм пропуска получения кол-ва знаков после запятой, если результат будет не валидным
             String[] splitter = String.valueOf(result.getResult()).split("\\.");
             int i = splitter[1].length();
             Assertions.assertEquals(4, i); //кол-во знаков после запятой
+            String formattedDouble = String.format("%.4f",
+                Double.parseDouble(request_body.getNumber_1())
+                        / Double.parseDouble(request_body.getNumber_2())).replace(',', '.');
             Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
             Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
-            Assertions.assertEquals(
-                    Double.toString(Double.parseDouble(request_body.getNumber_1()) / Double.parseDouble(request_body.getNumber_2())),
-                    result.getResult());
+            Assertions.assertEquals(formattedDouble, result.getResult());
         }
         catch (ArrayIndexOutOfBoundsException e){
-            Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
-            Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
-            Assertions.assertEquals(
-                    Double.toString(Double.parseDouble(request_body.getNumber_1()) / Double.parseDouble(request_body.getNumber_2())),
-                    result.getResult());
+            Assertions.fail("Строка result содержит "+result.getResult());
         }
     }
 

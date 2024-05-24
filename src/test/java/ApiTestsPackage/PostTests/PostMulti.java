@@ -14,6 +14,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 @Epic("POST запросы")
+@DisplayName("POST *")
 public class PostMulti {
     @BeforeAll
     static void InstallSpec(){ //стандартные спецификации

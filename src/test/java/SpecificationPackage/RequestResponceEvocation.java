@@ -16,7 +16,8 @@ public class RequestResponceEvocation {
                 .assertThat().statusCode(201)
                 .extract().body().as(ResultData.class);
     }
-    public static void Evok201Negative(Object body){ //Нужен для потенциального клиента API и возвращения результата операции как error и записи в историю
+    //Нужен для потенциального клиента API и сохранения истории операций. Несмотря на некорректную операцию записывает ее в БД
+    public static void Evok201Negative(Object body){
         given()
                 .spec(Specifications.authCred())
                 .body(body)
@@ -26,7 +27,9 @@ public class RequestResponceEvocation {
                 .assertThat().statusCode(201)
                 .body("result", equalTo("error"));
     }
-    public static void Evok201Negative(Object body, String result){ //Если параметр result имеет отличное от стандартного значение
+
+    //Если параметр result имеет отличное от стандартного значение
+    public static void Evok201Negative(Object body, String result){
         given()
                 .spec(Specifications.authCred())
                 .body(body)

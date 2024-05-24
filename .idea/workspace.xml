@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79ac0e19-1918-453a-9b63-a0ac09cfb83b" name="Changes" comment="Base">
+    <list default="true" id="79ac0e19-1918-453a-9b63-a0ac09cfb83b" name="Changes" comment="Refactoring + body tests">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/BodyFormatTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/BodyFormatTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/GetOperatorTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/GetOperatorTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/IdTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/IdTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/PostTests/PostDivide.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/PostTests/PostDivide.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/PostTests/PostEqual.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/PostTests/PostEqual.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/PostTests/PostMinus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/PostTests/PostMinus.java" afterDir="false" />
@@ -14,7 +17,6 @@
       <change beforePath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/PostTests/PostPlus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/PostTests/PostPlus.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/UnspecifiedTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ApiTestsPackage/UnspecifiedTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/SpecificationPackage/RequestResponceEvocation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/SpecificationPackage/RequestResponceEvocation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/SpecificationPackage/Specifications.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/SpecificationPackage/Specifications.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,29 +49,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "ShowUsagesActions.previewPropertyKey": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "Q:/projects/CalcAPITests/src/test/java/JSONFiles",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "inlay.hints"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;Q:/projects/CalcAPITests/src/test/java/JSONFiles&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="Q:\projects\CalcAPITests\src\test\java\JSONFiles" />
       <recent name="D:\projects\CalcAPITests\src\test\java" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.BodyFormatTests.PostMixedBody">
-    <configuration name="BodyFormatTests.PostMixedBody" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.AuthorizationTests.AuthorizationPositive">
+    <configuration name="AuthorizationTests.AuthorizationPositive" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="CalcAPITests" />
       <extension name="coverage">
         <pattern>
@@ -78,62 +78,46 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="ApiTestsPackage" />
-      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.BodyFormatTests" />
-      <option name="METHOD_NAME" value="PostMixedBody" />
+      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.AuthorizationTests" />
+      <option name="METHOD_NAME" value="AuthorizationPositive" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PostDivide.PostDividePositive" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="GetOperatorTests.GetEmpty" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="CalcAPITests" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="ApiTestsPackage.PostTests.*" />
+          <option name="PATTERN" value="ApiTestsPackage.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="ApiTestsPackage.PostTests" />
-      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.PostTests.PostDivide" />
-      <option name="METHOD_NAME" value="PostDividePositive" />
+      <option name="PACKAGE_NAME" value="ApiTestsPackage" />
+      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.GetOperatorTests" />
+      <option name="METHOD_NAME" value="GetEmpty" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PostDivide.PostDivideZero" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="GetOperatorTests.OperatorsAll" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="CalcAPITests" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="ApiTestsPackage.PostTests.*" />
+          <option name="PATTERN" value="ApiTestsPackage.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="ApiTestsPackage.PostTests" />
-      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.PostTests.PostDivide" />
-      <option name="METHOD_NAME" value="PostDivideZero" />
+      <option name="PACKAGE_NAME" value="ApiTestsPackage" />
+      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.GetOperatorTests" />
+      <option name="METHOD_NAME" value="OperatorsAll" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PostPlus.PostPlusString" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="CalcAPITests" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ApiTestsPackage.PostTests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="ApiTestsPackage.PostTests" />
-      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.PostTests.PostPlus" />
-      <option name="METHOD_NAME" value="PostPlusString" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UnspecifiedTests.AllowedRequestList" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="UnspecifiedTests.CheckId" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="CalcAPITests" />
       <extension name="coverage">
         <pattern>
@@ -143,7 +127,23 @@
       </extension>
       <option name="PACKAGE_NAME" value="ApiTestsPackage" />
       <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.UnspecifiedTests" />
-      <option name="METHOD_NAME" value="AllowedRequestList" />
+      <option name="METHOD_NAME" value="CheckId" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UnspecifiedTests.DeleteEnemy" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="CalcAPITests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ApiTestsPackage.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="ApiTestsPackage" />
+      <option name="MAIN_CLASS_NAME" value="ApiTestsPackage.UnspecifiedTests" />
+      <option name="METHOD_NAME" value="DeleteEnemy" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -162,11 +162,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.BodyFormatTests.PostMixedBody" />
-        <item itemvalue="JUnit.PostDivide.PostDividePositive" />
-        <item itemvalue="JUnit.PostDivide.PostDivideZero" />
-        <item itemvalue="JUnit.UnspecifiedTests.AllowedRequestList" />
-        <item itemvalue="JUnit.PostPlus.PostPlusString" />
+        <item itemvalue="JUnit.AuthorizationTests.AuthorizationPositive" />
+        <item itemvalue="JUnit.UnspecifiedTests.DeleteEnemy" />
+        <item itemvalue="JUnit.UnspecifiedTests.CheckId" />
+        <item itemvalue="JUnit.GetOperatorTests.OperatorsAll" />
+        <item itemvalue="JUnit.GetOperatorTests.GetEmpty" />
       </list>
     </recent_temporary>
   </component>
@@ -181,6 +181,7 @@
       <workItem from="1716285135527" duration="15788000" />
       <workItem from="1716336546635" duration="136000" />
       <workItem from="1716336692504" duration="24376000" />
+      <workItem from="1716420916729" duration="25499000" />
     </task>
     <task id="LOCAL-00001" summary="Base">
       <created>1716290849201</created>

@@ -1,24 +1,28 @@
 package ApiTestsPackage;
 
 import PojoClasses.ResultData;
-import SpecificationPackage.RequestResponceEvocation;
 import SpecificationPackage.Specifications;
 import com.jayway.jsonpath.JsonPath;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.*;
-
 import java.io.File;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
 
-@Epic("Тесты передачи BODY")
+@Epic("POST запросы")
+@DisplayName("POST body")
 public class BodyFormatTests {
+    //Пришлось отказаться от сокращений из RequestResponceEvocation.
+    //В дебагере видно что переменная типа File, но в запросе летит строка пути до файла а не сам файл
     @BeforeAll
     static void InstallSpec(){ //стандартные спецификации
         Specifications.Install(Specifications.requestSpec());
     }
+
     @AfterAll
     static void DeleteEntries() { //удаление тестовых данных из БД;
         given()
@@ -28,8 +32,10 @@ public class BodyFormatTests {
                 .then()
                 .log().all();
     }
+
     @Test
-    @Feature("Позитивные")
+    @Feature("Правильность обработки тела")
+    @Story("Позитивные")
     @DisplayName("BODY mixed")
     @Description("POST запрос с оператором '+', в теле запроса переставлены местами ожидаемые параметры. " +
             "Должен вепрнуть результат сложения двух чисел")
@@ -37,7 +43,14 @@ public class BodyFormatTests {
     @Tag("POST")
     public void PostMixedBody() {
         File json = new File("./src/test/java/JSONFiles/MixedBody.json");
-        ResultData result = RequestResponceEvocation.Evok201(json);
+        ResultData result = given()
+                .spec(Specifications.authCred())
+                .body(json)
+                .when()
+                .post()
+                .then().log().all()
+                .assertThat().statusCode(201)
+                .extract().body().as(ResultData.class);
         try {
             Assertions.assertEquals(JsonPath.read(json, "number_1"), result.getNumber_1());
             Assertions.assertEquals(JsonPath.read(json, "number_2"), result.getNumber_2());
@@ -48,10 +61,13 @@ public class BodyFormatTests {
                             result.getResult());
         }
         catch(Exception e) {
+            Assertions.fail("Не удалось конвертировать значение из json файла");
         }
     }
+
     @Test
-    @Feature("Негативные")
+    @Story("Негативные")
+    @Feature("Правильность обработки тела")
     @DisplayName("BODY Upper reg parameters")
     @Description("POST запрос с оператором '+', в теле запроса наименование параметра 'operator' большими буквами. " +
             "В целях соблюдения правильности запроса должен вернуть код 400")
@@ -59,26 +75,53 @@ public class BodyFormatTests {
     @Tag("Исследовательские")
     @Tag("POST")
     public void PostUpperBody() {
-        RequestResponceEvocation.Evok400(new File("./src/test/java/JSONFiles/UpperBody.json"));
+        File json = new File("./src/test/java/JSONFiles/UpperBody.json");
+        given()
+                .spec(Specifications.authCred())
+                .body(json)
+                .when()
+                .post()
+                .then().log().all()
+                .assertThat().statusCode(400)
+                .body("error", equalTo("incorrect data"));
     }
+
     @Test
-    @Feature("Негативные")
+    @Story("Негативные")
+    @Feature("Правильность обработки тела")
     @DisplayName("BODY garbage data")
     @Description("POST запрос с оператором '+', в файле json содержится невалидное json тело. " +
             "Должен вернуться код 400")
     @Tag("Негативные")
     @Tag("POST")
     public void PostGarbageData() {
-        RequestResponceEvocation.Evok400(new File("./src/test/java/JSONFiles/GarbageBody.json"));
+        File json = new File("./src/test/java/JSONFiles/GarbageBody.json");
+        given()
+                .spec(Specifications.authCred())
+                .body(json)
+                .when()
+                .post()
+                .then().log().all()
+                .assertThat().statusCode(400)
+                .body("detail", containsString("JSON parse error"));
     }
     @Test
-    @Feature("Негативные")
+    @Story("Негативные")
+    @Feature("Правильность обработки тела")
     @DisplayName("BODY additional param")
     @Description("POST запрос с оператором '+', в теле запроса содержится лишний параметр" +
             "В целях соблюдения правильности запроса должен вернуть код 400")
     @Tag("Негативные")
     @Tag("POST")
     public void PostAdditionalParam() {
-        RequestResponceEvocation.Evok400(new File("./src/test/java/JSONFiles/AddParamBody.json"));
+        File json = new File("./src/test/java/JSONFiles/AddParamBody.json");
+        given()
+                .spec(Specifications.authCred())
+                .body(json)
+                .when()
+                .post()
+                .then().log().all()
+                .assertThat().statusCode(400)
+                .body("error", equalTo("incorrect data"));
     }
 }
