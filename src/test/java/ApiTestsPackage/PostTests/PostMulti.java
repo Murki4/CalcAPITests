@@ -11,7 +11,6 @@ import io.qameta.allure.Story;
 import org.junit.jupiter.api.*;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
 
 @Epic("POST запросы")
 @DisplayName("POST *")
@@ -22,9 +21,9 @@ public class PostMulti {
     }
     @AfterAll
     static void DeleteEntries() { //удаление тестовых данных из БД;
-        RequestResponceEvocation.EvokDeletion();
+        RequestResponceEvocation.EvokeDeletion();
     }
-    @Test
+    @RepeatedTest(5)
     @Feature("POST *")
     @Story("Позитивные")
     @DisplayName("POST * с двузначными числами")
@@ -34,9 +33,11 @@ public class PostMulti {
     @Tag("POST")
     public void PostMultiPositive() {
         PostRequestBody request_body = new PostRequestBody("*");
-        ResultData result = RequestResponceEvocation.Evok201(request_body);
+        ResultData result = RequestResponceEvocation.Evoke201(request_body);
+        Assertions.assertTrue(result.getPk()>0);
         Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
         Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
+        Assertions.assertEquals(request_body.getOperator(), result.getOperator());
         Assertions.assertEquals(
                 Double.toString(Double.parseDouble(request_body.getNumber_1()) * Double.parseDouble(request_body.getNumber_2())),
                 result.getResult());
@@ -50,7 +51,7 @@ public class PostMulti {
     @Tag("Негативные")
     @Tag("POST")
     public void PostMultiString() {
-        RequestResponceEvocation.Evok201Negative(new PostRequestBody("s", "s", "*"));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("s", "s", "*"));
     }
 
     @Test
@@ -63,7 +64,7 @@ public class PostMulti {
     @Tag("Негативные")
     @Tag("Исследовательские")
     void PostMultiDoubleTrim() {
-        RequestResponceEvocation.Evok201Negative(new PostRequestBody("13.6", "21.5", "*"));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("13.6", "21.5", "*"));
     }
 
     @Test
@@ -76,9 +77,11 @@ public class PostMulti {
     @Tag("POST")
     void PostMultiNegativeNumbers() {
         PostRequestBody request_body = new PostRequestBody("-23", "-54", "*");
-        ResultData result = RequestResponceEvocation.Evok201(request_body);
+        ResultData result = RequestResponceEvocation.Evoke201(request_body);
+        Assertions.assertTrue(result.getPk()>0);
         Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
         Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
+        Assertions.assertEquals(request_body.getOperator(), result.getOperator());
         Assertions.assertEquals(
                 Double.toString(Double.parseDouble(request_body.getNumber_1()) * Double.parseDouble(request_body.getNumber_2())),
                 result.getResult());
@@ -92,6 +95,6 @@ public class PostMulti {
     @Tag("POST")
     @Tag("Негативные")
     public void PostMultiNegativeThreeDigits() {
-        RequestResponceEvocation.Evok201Negative(new PostRequestBody("100", "200", "*"));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("100", "200", "*"));
     }
 }

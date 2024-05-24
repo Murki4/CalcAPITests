@@ -2,6 +2,7 @@ package ApiTestsPackage;
 
 import PojoClasses.PostRequestBody;
 import PojoClasses.ResultData;
+import SpecificationPackage.RequestResponceEvocation;
 import SpecificationPackage.Specifications;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -9,9 +10,9 @@ import io.qameta.allure.Feature;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import static org.hamcrest.Matchers.equalTo;
 import java.util.List;
 
+import static org.hamcrest.Matchers.equalTo;
 import static io.restassured.RestAssured.given;
 
 @Epic("GET запросы")
@@ -34,28 +35,33 @@ public class GetOperatorTests {
 
     @AfterAll
     static void DeleteEntries() { //удаление тестовых данных
-        given()
-                .spec(Specifications.authCred())
-                .when()
-                .delete()
-                .then()
-                .log().all();
+        RequestResponceEvocation.EvokeDeletion();
     }
 
     @Test
     @Feature("Позитивные")
     @DisplayName("GET пустой")
-    @Description("GET запрос без параметров. Должен вернуть код 200 и список всех опаераций пользователя")
+    @Description("GET запрос без параметров. Должен вернуть код 200 и список 10 опаераций пользователя")
     @Tag("Позитивные")
     @Tag("GET")
     public void GetEmpty() {
-        given()
+        List<ResultData> entries = given()
                 .spec(Specifications.authCred())
                 .when()
                 .get()
                 .then().log().all()
-                .statusCode(400)
-                .body("error", equalTo("not supported operator"));
+                .statusCode(200)
+                .extract().body().jsonPath().getList("",ResultData.class);
+        Assertions.assertNotNull(entries);
+        Assertions.assertEquals(10,entries.size());
+        for(ResultData l : entries){
+            Assertions.assertNotEquals("", l.getNumber_1());
+            Assertions.assertNotEquals("", l.getNumber_2());
+            Assertions.assertNotEquals("", l.getOperator());
+            Assertions.assertNotEquals("", l.getResult());
+        }
+
+
     }
 
     @Test
@@ -96,14 +102,17 @@ public class GetOperatorTests {
             oper = "=";
         }
         for (ResultData entry : entries) {
+            Assertions.assertNotEquals("", entry.getNumber_1());
+            Assertions.assertNotEquals("", entry.getNumber_2());
             Assertions.assertEquals(entry.getOperator(), oper);
+            Assertions.assertNotEquals("", entry.getResult());
         }
     }
 
     @Test
     @Feature("Негативные")
-    @DisplayName("GET operator негативный")
-    @Description("GET запрос с параметром operators и неподдерживаемым оператором. " +
+    @DisplayName("GET operator случайное значение")
+    @Description("GET запрос с параметром operators и неподдерживаемым арифметическим оператором. " +
             "Должен вернуть код 400 и ошибку error = not supported operator")
     @Tag("Негативные")
     @Tag("GET")
@@ -111,7 +120,7 @@ public class GetOperatorTests {
         given()
                 .spec(Specifications.authCred())
                 .when()
-                .get("?operator=ggag")
+                .get("?operator=^")
                 .then().log().all()
                 .statusCode(400)
                 .body("error", equalTo("not supported operator"));

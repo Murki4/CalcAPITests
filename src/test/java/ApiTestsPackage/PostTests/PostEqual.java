@@ -19,7 +19,7 @@ public class PostEqual {
     }
     @AfterAll
     static void DeleteEntries() { //удаление тестовых данных из БД;
-        RequestResponceEvocation.EvokDeletion();
+        RequestResponceEvocation.EvokeDeletion();
     }
     @Test
     @Feature("POST =")
@@ -29,11 +29,15 @@ public class PostEqual {
     @Tag("Позитивные")
     @Tag("POST")
     public void PostEqualTrue() {
-        PostRequestBody request_body = new PostRequestBody("50", "50", "=");
-        ResultData result = RequestResponceEvocation.Evok201(request_body);
+        PostRequestBody request_body = new PostRequestBody("50", "50.0", "=");
+        ResultData result = RequestResponceEvocation.Evoke201(request_body);
         String body_bool = Boolean.toString(
                 Double.parseDouble(request_body.getNumber_1()) == Double.parseDouble(request_body.getNumber_2()));
         body_bool = body_bool.substring(0, 1).toUpperCase() + body_bool.substring(1); // в ответе True/False с большой буквы >_<
+        Assertions.assertTrue(result.getPk()>0);
+        Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
+        Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
+        Assertions.assertEquals(request_body.getOperator(), result.getOperator());
         Assertions.assertEquals(
                 body_bool,
                 result.getResult());
@@ -48,10 +52,14 @@ public class PostEqual {
     @Tag("POST")
     public void PostEqualFalse() {
         PostRequestBody request_body = new PostRequestBody("50", "20", "=");
-        ResultData result = RequestResponceEvocation.Evok201(request_body);
+        ResultData result = RequestResponceEvocation.Evoke201(request_body);
         String body_bool = Boolean.toString(
                 Double.parseDouble(request_body.getNumber_1()) == Double.parseDouble(request_body.getNumber_2()));
         body_bool = body_bool.substring(0, 1).toUpperCase() + body_bool.substring(1);
+        Assertions.assertTrue(result.getPk()>0);
+        Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
+        Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
+        Assertions.assertEquals(request_body.getOperator(), result.getOperator());
         Assertions.assertEquals(
                 body_bool,
                 result.getResult());
@@ -65,7 +73,7 @@ public class PostEqual {
     @Tag("Негативные")
     @Tag("POST")
     public void PostEqualString() {
-        RequestResponceEvocation.Evok201Negative(new PostRequestBody("s", "s", "="));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("s", "s", "="));
     }
 
     @Test
@@ -78,7 +86,7 @@ public class PostEqual {
     @Tag("Негативные")
     @Tag("Исследовательские")
     void PostEqualDoubleTrim() {
-        RequestResponceEvocation.Evok201Negative(new PostRequestBody("13.6", "21.5", "="));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("13.6", "21.5", "="));
     }
 
     @Test
@@ -89,9 +97,11 @@ public class PostEqual {
             "Должен вернуть результат сравнения False.")
     void PostEqualNegativeNumbers() {
         PostRequestBody request_body = new PostRequestBody("-23", "-54", "=");
-        ResultData result = RequestResponceEvocation.Evok201(request_body);
+        ResultData result = RequestResponceEvocation.Evoke201(request_body);
+        Assertions.assertTrue(result.getPk()>0);
         Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
         Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
+        Assertions.assertEquals(request_body.getOperator(), result.getOperator());
         String body_bool = Boolean.toString(Double.parseDouble(request_body.getNumber_1()) == Double.parseDouble(request_body.getNumber_2()));
         body_bool = body_bool.substring(0, 1).toUpperCase() + body_bool.substring(1);
         Assertions.assertEquals(
@@ -107,6 +117,6 @@ public class PostEqual {
     @Tag("POST")
     @Tag("Негативные")
     public void PostEqualNegativeThreeDigits() {
-        RequestResponceEvocation.Evok201Negative(new PostRequestBody("100", "200", "="));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("100", "200", "="));
     }
 }
