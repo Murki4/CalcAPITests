@@ -5,12 +5,15 @@ import PojoClasses.ResultData;
 import SpecificationPackage.Specifications;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Flaky;
 import org.junit.jupiter.api.*;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 import static io.restassured.RestAssured.given;
 
-@Epic("Operations with entries")
+@Epic("Операции с id")
+@DisplayName("Операции с id")
 public class IdTest {
     private static Integer idlist;
     @BeforeAll
@@ -24,6 +27,7 @@ public class IdTest {
                 .then().log().all()
                 .extract().path("pk");
     }
+
     @AfterAll
     static void DeleteEntries() { //удаление тестовых данных из БД;
         given()
@@ -33,7 +37,9 @@ public class IdTest {
                 .then()
                 .log().all();
     }
+
     @Test
+    @Feature("Позитивный")
     @DisplayName("GET Id")
     @Description("GET запрос с параметром 'id', где id это номер существующей записи в БД. " +
             "Возращает информацию о записи")
@@ -49,7 +55,10 @@ public class IdTest {
                 .extract().body().as(ResultData.class);
         Assertions.assertEquals(IdTest.idlist, result.getPk());
     }
+
     @Test
+    @Flaky
+    @Feature("Негативный")
     @DisplayName("GET Id")
     @Description("GET запрос с параметром 'id', где id это номер не существующей записи в БД. " +
             "Возращает код 404 и ошибку 'id not found or incorrect data'")
@@ -59,10 +68,43 @@ public class IdTest {
         given()
                 .spec(Specifications.authCred())
                 .when()
-                .get("1")
+                .get(Integer.toString(IdTest.idlist + 10))
                 .then().log().all()
                 .assertThat().statusCode(404)
                 .body("error", equalTo("id not found or incorrect data"));
 
+    }
+    @Test
+    @Feature("Позитивный")
+    @DisplayName("DELETE Id")
+    @Description("DELETE запрос с параметром 'id', где id это номер существующей записи в БД. " +
+            "Должен вернуть код 200 и сообщение об удалении")
+    @Tag("GET")
+    @Tag("Позитивный")
+    public void DeleteId(){
+        given()
+                .spec(Specifications.authCred())
+                .when()
+                .get(Integer.toString(IdTest.idlist))
+                .then().log().all()
+                .assertThat().statusCode(200)
+                .body("message",equalTo("operation "+ IdTest.idlist + " is deleted"));
+    }
+
+    @Test
+    @Feature("Негативный")
+    @DisplayName("DELETE Id")
+    @Description("DELETE запрос с параметром 'id', где id это номер не существующей записи в БД. " +
+            "Должен вернуть код 404 и ошибку 'id not found or incorrect data'")
+    @Tag("DELETE")
+    @Tag("Негативный")
+    public void DeleteIdNegative(){
+        given()
+                .spec(Specifications.authCred())
+                .when()
+                .get("1")
+                .then().log().all()
+                .assertThat().statusCode(404)
+                .body("error", equalTo("id not found or incorrect data"));
     }
 }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 import static io.restassured.RestAssured.given;
 
 @Epic("POST запросы")
+@DisplayName("POST -")
 public class PostPlus {
     @BeforeAll
     static void InstallSpec() { //стандартные спецификации

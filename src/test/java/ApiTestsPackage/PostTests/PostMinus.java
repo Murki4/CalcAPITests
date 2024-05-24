@@ -10,10 +10,8 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.*;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-
 @Epic("POST запросы")
+@DisplayName("POST -")
 public class PostMinus {
     @BeforeAll
     static void InstallSpec(){ //стандартные спецификации
