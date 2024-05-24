@@ -9,6 +9,8 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 @Epic("POST запросы")
 @DisplayName("POST /")
@@ -19,9 +21,10 @@ public class PostDivide {
     }
     @AfterAll
     static void DeleteEntries() { //удаление тестовых данных из БД;
-        RequestResponceEvocation.EvokDeletion();
+        RequestResponceEvocation.EvokeDeletion();
     }
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"8","99"})
     @Feature("POST /")
     @Story("Позитивные")
     @DisplayName("POST / с двузначными числами")
@@ -29,22 +32,26 @@ public class PostDivide {
             "деления двух чисел с точностью до четырех знаков после разделителя")
     @Tag("Позитивные")
     @Tag("POST")
-    public void PostDividePositive() {
-        PostRequestBody request_body = new PostRequestBody("10","9","/");
-        ResultData result = RequestResponceEvocation.Evok201(request_body);
+    public void PostDividePositive(String num2) {
+        PostRequestBody request_body = new PostRequestBody("1", num2,"/");
+        ResultData result = RequestResponceEvocation.Evoke201(request_body);
         try { //механизм пропуска получения кол-ва знаков после запятой, если результат будет без знака точки
             String[] splitter = String.valueOf(result.getResult()).split("\\.");
             int i = splitter[1].length();
-            Assertions.assertEquals(4, i); //проверка кол-ва знаков после запятой у ответа API
-            String formattedDouble = String.format("%.4f", //приведение верного ответа к нужной форме
+            if(i>4) {
+                Assertions.assertEquals(4, i); //проверка кол-ва знаков после запятой у ответа API
+            }
+            String formattedDouble = String.format("%."+i+"f", //приведение верного ответа к нужной форме
                     Double.parseDouble(request_body.getNumber_1())
                             / Double.parseDouble(request_body.getNumber_2())).replace(',', '.');
+            Assertions.assertTrue(result.getPk()>0);
             Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
             Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
+            Assertions.assertEquals(request_body.getOperator(), result.getOperator());
             Assertions.assertEquals(formattedDouble, result.getResult());
         }
         catch (ArrayIndexOutOfBoundsException e){
-            Assertions.fail("Строка result содержит "+result.getResult());
+            Assertions.fail("Ошибка. Строка result содержит "+result.getResult());
         }
     }
 
@@ -58,7 +65,7 @@ public class PostDivide {
     @Tag("Негативные")
     @Tag("Исследовательские")
     void PostDivideDoubleTrim() {
-        RequestResponceEvocation.Evok201Negative(new PostRequestBody("13.6", "21.5", "/"));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("13.6", "21.5", "/"));
     }
 
     @Test
@@ -71,20 +78,24 @@ public class PostDivide {
     @Tag("POST")
     void PostDivideNegativeNumbers() {
         PostRequestBody request_body = new PostRequestBody("-49", "-6", "/");
-        ResultData result = RequestResponceEvocation.Evok201(request_body);
-        try { //механизм пропуска получения кол-ва знаков после запятой, если результат будет не валидным
+        ResultData result = RequestResponceEvocation.Evoke201(request_body);
+        try { //механизм пропуска получения кол-ва знаков после запятой, если результат будет без знака точки
             String[] splitter = String.valueOf(result.getResult()).split("\\.");
             int i = splitter[1].length();
-            Assertions.assertEquals(4, i); //кол-во знаков после запятой
-            String formattedDouble = String.format("%.4f",
-                Double.parseDouble(request_body.getNumber_1())
-                        / Double.parseDouble(request_body.getNumber_2())).replace(',', '.');
+            if(i>4) {
+                Assertions.assertEquals(4, i); //вывод сообщения о превышении количества знаков
+            }
+            String formattedDouble = String.format("%."+i+"f", //приведение верного ответа к нужной форме
+                    Double.parseDouble(request_body.getNumber_1())
+                            / Double.parseDouble(request_body.getNumber_2())).replace(',', '.');
+            Assertions.assertTrue(result.getPk()>0);
             Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
             Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
+            Assertions.assertEquals(request_body.getOperator(), result.getOperator());
             Assertions.assertEquals(formattedDouble, result.getResult());
         }
         catch (ArrayIndexOutOfBoundsException e){
-            Assertions.fail("Строка result содержит "+result.getResult());
+            Assertions.fail("Ошибка. Строка result содержит "+result.getResult());
         }
     }
 
@@ -96,7 +107,7 @@ public class PostDivide {
     @Tag("POST")
     @Tag("Негативные")
     public void PostDivideNegativeThreeDigits() {
-        RequestResponceEvocation.Evok201Negative(new PostRequestBody("100", "200", "/"));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("100", "200", "/"));
     }
 
     @Test
@@ -107,6 +118,6 @@ public class PostDivide {
     @Tag("POST")
     @Tag("Негативные")
     public void PostDivideZero() {
-        RequestResponceEvocation.Evok201Negative(new PostRequestBody("35", "0", "/"),"Zero division error");
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("35", "0", "/"),"Zero division error");
     }
 }

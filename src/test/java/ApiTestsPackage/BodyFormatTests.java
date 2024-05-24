@@ -1,6 +1,7 @@
 package ApiTestsPackage;
 
 import PojoClasses.ResultData;
+import SpecificationPackage.RequestResponceEvocation;
 import SpecificationPackage.Specifications;
 import com.jayway.jsonpath.JsonPath;
 import io.qameta.allure.Description;
@@ -25,12 +26,7 @@ public class BodyFormatTests {
 
     @AfterAll
     static void DeleteEntries() { //удаление тестовых данных из БД;
-        given()
-                .spec(Specifications.authCred())
-                .when()
-                .delete()
-                .then()
-                .log().all();
+        RequestResponceEvocation.EvokeDeletion();
     }
 
     @Test
@@ -52,8 +48,10 @@ public class BodyFormatTests {
                 .assertThat().statusCode(201)
                 .extract().body().as(ResultData.class);
         try {
+            Assertions.assertTrue(result.getPk()>0);
             Assertions.assertEquals(JsonPath.read(json, "number_1"), result.getNumber_1());
             Assertions.assertEquals(JsonPath.read(json, "number_2"), result.getNumber_2());
+            Assertions.assertEquals(JsonPath.read(json, "operator"), result.getOperator());
             Assertions.assertEquals(
                     Double.toString(
                             Double.parseDouble(JsonPath.read(json, "number_1")) +

@@ -6,6 +6,8 @@ import SpecificationPackage.RequestResponceEvocation;
 import SpecificationPackage.Specifications;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.restassured.RestAssured.given;
 
@@ -19,10 +21,10 @@ public class PostPlus {
 
     @AfterAll
     static void DeleteEntries() { //удаление тестовых данных из БД;
-        RequestResponceEvocation.EvokDeletion();
+        RequestResponceEvocation.EvokeDeletion();
     }
 
-    @Test
+    @RepeatedTest(5)
     @Feature("POST +")
     @Story("Позитивные")
     @DisplayName("POST + с двузначными целыми числами")
@@ -32,9 +34,11 @@ public class PostPlus {
     @Tag("POST")
     public void PostPlusPositive() {
         PostRequestBody request_body = new PostRequestBody("+");
-        ResultData result = RequestResponceEvocation.Evok201(request_body);
+        ResultData result = RequestResponceEvocation.Evoke201(request_body);
+        Assertions.assertTrue(result.getPk()>0);
         Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
         Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
+        Assertions.assertEquals(request_body.getOperator(), result.getOperator());
         Assertions.assertEquals(
                 Double.toString(Double.parseDouble(request_body.getNumber_1()) + Double.parseDouble(request_body.getNumber_2())),
                 result.getResult());
@@ -48,7 +52,7 @@ public class PostPlus {
     @Tag("Негативные")
     @Tag("POST")
     public void PostPlusString() {
-        RequestResponceEvocation.Evok201Negative(new PostRequestBody("s", "s", "+"));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("s", "s", "+"));
     }
 
     @Test
@@ -61,7 +65,7 @@ public class PostPlus {
     @Tag("Негативные")
     @Tag("Исследовательские")
     void PostPlusDoubleTrim() {
-        RequestResponceEvocation.Evok201Negative(new PostRequestBody("25.6", "22.5", "+"));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("25.6", "22.5", "+"));
     }
 
     @Test
@@ -72,11 +76,13 @@ public class PostPlus {
     @Tag("Позитивные")
     @Description("POST с оператором '+' и двумя отрицательными числами." +
             "Результатом должен быть верный результат сложения двух чисел.")
-    void PostPlusNegativeNumbersTwoDigits() {
+    public void PostPlusNegativeNumbersTwoDigits() {
         PostRequestBody request_body = new PostRequestBody("-17", "-29", "+");
-        ResultData result = RequestResponceEvocation.Evok201(request_body);
+        ResultData result = RequestResponceEvocation.Evoke201(request_body);
+        Assertions.assertTrue(result.getPk()>0);
         Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
         Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
+        Assertions.assertEquals(request_body.getOperator(), result.getOperator());
         Assertions.assertEquals(
                 Double.toString(Double.parseDouble(request_body.getNumber_1()) + Double.parseDouble(request_body.getNumber_2())),
                 result.getResult());
@@ -90,6 +96,24 @@ public class PostPlus {
     @Tag("POST")
     @Tag("Негативные")
     public void PostPlusThreeDigits() {
-        RequestResponceEvocation.Evok201Negative(new PostRequestBody("100", "209", "+"));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("100", "209", "+"));
+    }
+
+    @ParameterizedTest
+    @Feature("POST +")
+    @ValueSource(strings = {"1","11"})
+    @Story("Позитивные?")
+    @DisplayName("POST 1+1, 1+11")
+    @Description("POST запрос с выражением  Должно вернуть код 201 и результат 2")
+    public void PostPlusOne(String num1){
+        PostRequestBody request_body = new PostRequestBody(num1,"1","+");
+        ResultData result = RequestResponceEvocation.Evoke201(request_body);
+        Assertions.assertTrue(result.getPk()>0);
+        Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
+        Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
+        Assertions.assertEquals(request_body.getOperator(), result.getOperator());
+        Assertions.assertEquals(
+                Double.toString(Double.parseDouble(request_body.getNumber_1()) + Double.parseDouble(request_body.getNumber_2())),
+                result.getResult());
     }
 }

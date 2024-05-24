@@ -2,22 +2,23 @@ package ApiTestsPackage;
 
 import PojoClasses.PostRequestBody;
 import PojoClasses.ResultData;
+import SpecificationPackage.RequestResponceEvocation;
 import SpecificationPackage.Specifications;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Flaky;
 import org.junit.jupiter.api.*;
-import static org.hamcrest.core.IsEqual.equalTo;
 
+import static org.hamcrest.core.IsEqual.equalTo;
 import static io.restassured.RestAssured.given;
 
 @Epic("Операции с id")
 @DisplayName("Операции с id")
 public class IdTest {
     private static Integer idlist;
-    @BeforeAll
-    static void InstallSpecAndMakeTestEntry(){ //установка стандартных спецификаций и создание набора данных для теста
+    @BeforeEach
+    void InstallSpecAndMakeTestEntry(){ //установка стандартных спецификаций и создание набора данных для теста
         Specifications.Install(Specifications.requestSpec());
         IdTest.idlist = given()
                 .spec(Specifications.authCred())
@@ -28,14 +29,9 @@ public class IdTest {
                 .extract().path("pk");
     }
 
-    @AfterAll
-    static void DeleteEntries() { //удаление тестовых данных из БД;
-        given()
-                .spec(Specifications.authCred())
-                .when()
-                .delete()
-                .then()
-                .log().all();
+    @AfterEach
+    void DeleteEntries() { //удаление тестовых данных из БД;
+        RequestResponceEvocation.EvokeDeletion();
     }
 
     @Test
@@ -54,6 +50,12 @@ public class IdTest {
                 .assertThat().statusCode(200)
                 .extract().body().as(ResultData.class);
         Assertions.assertEquals(IdTest.idlist, result.getPk());
+        Assertions.assertNotNull(result.getNumber_1());
+        Assertions.assertNotNull(result.getNumber_2());
+        Assertions.assertNotNull(result.getOperator());
+        Assertions.assertNotNull(result.getResult());
+        Assertions.assertNotNull(result.getUser());
+        Assertions.assertNotNull(result.getDate_create());
     }
 
     @Test
@@ -68,7 +70,7 @@ public class IdTest {
         given()
                 .spec(Specifications.authCred())
                 .when()
-                .get(Integer.toString(IdTest.idlist + 10))
+                .get(IdTest.idlist + 10 + "/")
                 .then().log().all()
                 .assertThat().statusCode(404)
                 .body("error", equalTo("id not found or incorrect data"));
@@ -85,10 +87,17 @@ public class IdTest {
         given()
                 .spec(Specifications.authCred())
                 .when()
-                .get(Integer.toString(IdTest.idlist))
+                .delete(Integer.toString(IdTest.idlist))
                 .then().log().all()
                 .assertThat().statusCode(200)
                 .body("message",equalTo("operation "+ IdTest.idlist + " is deleted"));
+        given()
+                .spec(Specifications.authCred())
+                .when()
+                .get(IdTest.idlist+"/")
+                .then().log().all()
+                .assertThat().statusCode(404)
+                .body("error", equalTo("id not found or incorrect data"));
     }
 
     @Test
@@ -102,7 +111,7 @@ public class IdTest {
         given()
                 .spec(Specifications.authCred())
                 .when()
-                .get("1")
+                .delete("1/")
                 .then().log().all()
                 .assertThat().statusCode(404)
                 .body("error", equalTo("id not found or incorrect data"));
