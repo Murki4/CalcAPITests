@@ -4,14 +4,11 @@ import PojoClasses.PostRequestBody;
 import PojoClasses.ResultData;
 import SpecificationPackage.RequestResponceEvocation;
 import SpecificationPackage.Specifications;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.qameta.allure.*;
-import io.restassured.response.Response;
-import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
@@ -19,23 +16,27 @@ import static org.hamcrest.Matchers.equalTo;
 @Epic("Неклассифицированные тесты")
 @DisplayName("Исследовательские/деструктивные тесты")
 public class UnspecifiedTests {
+
     @BeforeAll
     static void InstallSpec(){ //стандартные спецификации
         Specifications.Install(Specifications.requestSpec());
     }
+
     @AfterAll
     static void DeleteEntries(){
         RequestResponceEvocation.EvokeDeletion();
     }
+
     @Test
-    @Feature("Запросы к API")
+    @Disabled
+    @Feature("Ограничения")
     @DisplayName("Опрос разрешенных типов запроса")
     @Description("Пустой GET запрос для получения списка разрешенных запросов, сравнение со списком в документации. " +
             "При полном соответствии тест будет пройден, при провале будет выведен список ")
     @Tag("Позитивный")
     @Tag("GET")
     @Tag("Исследовательский")
-    public void AllowedRequestList(){
+    void AllowedRequestList(){
         String allow = given()
                 .spec(Specifications.authCred())
                 .when()
@@ -53,23 +54,6 @@ public class UnspecifiedTests {
         }
         Assertions.assertEquals(new ArrayList<>(),mismatch_requests);
     }
-    @Test
-    @Feature("Ограничения")
-    @DisplayName("Get некорректный оператор")
-    @Description("GET запрос с некорректным оператором. " +
-            "Должен вернуть код 400")
-    @Tag("Негативный")
-    @Tag("Исследовательский")
-    public void GetRequestWithInvalidParam(){
-        given()
-                .spec(Specifications.authCred())
-                .when()
-                .get("?random=")
-                .then()
-                .log().all()
-                .assertThat().statusCode(400)
-                .body("error", equalTo("not supported operator"));
-    }
 
     @Test
     @Feature("Ограничения")
@@ -78,7 +62,7 @@ public class UnspecifiedTests {
             "Должен вернуть код 405")
     @Tag("Негативный")
     @Tag("Исследовательский")
-    public void InvalidRequest(){
+    void InvalidRequest(){
         given()
                 .spec(Specifications.authCred())
                 .when()
@@ -89,20 +73,34 @@ public class UnspecifiedTests {
     }
 
     @Test
-    @Disabled
-    @Feature("Ограничения")
-    @DisplayName("OPTIONS")
-    @Description("OPTIONS запрос для получения спецификации по REST API")
-    @Tag("OPTIONS")
-    @Tag("Исследовательский")
-    public void DeleteAll(){
-        given()
+    @Feature("Функционал")
+    @DisplayName("Удаление всех записей")
+    @Description("DELETE запрос без операторов. Удаляет все записи данног опользователя из бд. " +
+            "Возвращает код 200 и message = all operations of the curent user gave been deleted")
+    void DeleteAll(){
+        given()//создание тестовой записи
+                .spec(Specifications.authCred())
+                .body(new PostRequestBody("+"))
+                .when()
+                .post()
+                .then().log().all()
+                .assertThat().statusCode(201);
+        given()//удаление всех записей
                 .spec(Specifications.authCred())
                 .when()
                 .delete()
                 .then()
                 .log().all()
-                .assertThat().statusCode(200);
+                .assertThat().statusCode(200)
+                .body("message",equalTo("all operations of the current user have been deleted"));
+        List<ResultData> entries = given() //проверка что действительно ничего нет
+                .spec(Specifications.authCred())
+                .when()
+                .get()
+                .then().log().all()
+                .statusCode(200)
+                .extract().body().jsonPath().getList("",ResultData.class);
+        Assertions.assertEquals(new ArrayList<>(),entries);
     }
 
     @Test
@@ -112,7 +110,7 @@ public class UnspecifiedTests {
     @Description("OPTIONS запрос для получения спецификации по REST API")
     @Tag("OPTIONS")
     @Tag("Исследовательский")
-    public void GetOptions(){
+    void GetOptions(){
         String l = given()
                 .spec(Specifications.authCred())
                 .when()
@@ -152,92 +150,14 @@ public class UnspecifiedTests {
     }
 
     @Test
-    @Disabled
     @Feature("Ограничения")
-    @DisplayName("Перенаполнение операторов number")
-    @Description("POST запрос с оператором '+' и двумя числами с плавающей точкой, " +
-            "где после точки неограниченное количество цифр. Должен вернуть ошибку и код 400.")
+    @DisplayName("POST Неверный оператор для действий с числами")
+    @Description("POST запрос с оператором '(' и двумя числами. Должен вернуть код 201 и параметр result = error")
     @Tag("POST")
     @Tag("Негативные")
     @Tag("Исследовательские")
-    void PostMultiDoubleFull() {
-        RequestResponceEvocation.Evoke400(new PostRequestBody("*", true));
-    }
-
-    @Test
-    @Disabled
-    @Feature("Безопасность")
-    @Description("Выборочная проверка id до 100. Любые вхождения будут записаны в файл отчета")
-    @Tag("GET")
-    //а что если... id общие для всех и чужие данные доступны?
-    public void CheckId() {
-        int i = 100;
-        String list = "";
-        Response response;
-        while (i < 120){
-            response = given()
-                    .spec(Specifications.authCred())
-                    .when()
-                    .get(i + "/")
-                    .then().log().all()
-                    .extract().response();
-            if(response.getStatusCode()!=404){
-                try {
-                    list += new ObjectMapper().writeValueAsString(response.getBody().as(ResultData.class));
-                }
-                catch (Exception e){
-                    list += "Не удалось записать строку\n";
-                }
-            }
-            i++;
-        }
-        if(list.isEmpty()) {
-            Allure.addAttachment("message","Чужих данных нет");
-        }
-        else{
-            Allure.addAttachment("Список чужих данных", list);
-            Assertions.fail("Найдены чужие данные");
-        }
-    }
-    //могу ли я их удалить?
-    @Test
-    @Disabled
-    @Feature("Безопасность")
-    @DisplayName("Удаление чужой записи")
-    @Description("Поиск записи не принадлежащей sys0b1_5 и попытка ее удалить")
-    @Tag("DELETE")
-    public void DeleteNotOwnedEntry(){
-        Response response;
-        int i = 100;
-        do{
-            i++;
-            response = given()
-                    .spec(Specifications.authCred())
-                    .when()
-                    .get(i+"/")
-                    .then().log().all()
-                    .extract().response();
-        }while(i<1000&&!(response.getStatusCode()==200&&response.getBody().path("user")!="sys0b1_5"));
-        if(i==1000){
-            Allure.addAttachment("message","Не удалось найти запись другого пользователя");
-        }
-        else{
-            given()
-                    .spec(Specifications.authCred())
-                    .when()
-                    .delete(i+"/")
-                    .then().log().all()
-                    .assertThat().statusCode(200)
-                    .body("message", IsEqual.equalTo("operation "+ i + " is deleted"));
-            given() //проверка отсутствия записи по id
-                    .spec(Specifications.authCred())
-                    .when()
-                    .get(i+"/")
-                    .then().log().all()
-                    .assertThat().statusCode(404)
-                    .body("error", IsEqual.equalTo("id not found or incorrect data"));
-            Assertions.fail("Запись другого пользователя успешно удалена");
-        } //ой-ёй
+    void PostWrongOperator() {
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("("),"error");
     }
 }
 

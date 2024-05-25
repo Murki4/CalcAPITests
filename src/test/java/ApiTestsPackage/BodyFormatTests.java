@@ -15,10 +15,10 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 @Epic("POST запросы")
-@DisplayName("POST body")
+@DisplayName("POST JSON")
 public class BodyFormatTests {
     //Пришлось отказаться от сокращений из RequestResponceEvocation.
-    //В дебагере видно что переменная типа File, но в запросе летит строка пути до файла а не сам файл
+    //В дебагере видно что передается переменная типа File, но в запросе летит строка пути до файла а не сам файл
     @BeforeAll
     static void InstallSpec(){ //стандартные спецификации
         Specifications.Install(Specifications.requestSpec());
@@ -37,7 +37,7 @@ public class BodyFormatTests {
             "Должен вепрнуть результат сложения двух чисел")
     @Tag("Позитивные")
     @Tag("POST")
-    public void PostMixedBody() {
+    void PostMixedBody() {
         File json = new File("./src/test/java/JSONFiles/MixedBody.json");
         ResultData result = given()
                 .spec(Specifications.authCred())
@@ -72,7 +72,7 @@ public class BodyFormatTests {
     @Tag("Негативные")
     @Tag("Исследовательские")
     @Tag("POST")
-    public void PostUpperBody() {
+    void PostUpperBody() {
         File json = new File("./src/test/java/JSONFiles/UpperBody.json");
         given()
                 .spec(Specifications.authCred())
@@ -92,7 +92,7 @@ public class BodyFormatTests {
             "Должен вернуться код 400")
     @Tag("Негативные")
     @Tag("POST")
-    public void PostGarbageData() {
+    void PostGarbageData() {
         File json = new File("./src/test/java/JSONFiles/GarbageBody.json");
         given()
                 .spec(Specifications.authCred())
@@ -111,7 +111,7 @@ public class BodyFormatTests {
             "В целях соблюдения правильности запроса должен вернуть код 400")
     @Tag("Негативные")
     @Tag("POST")
-    public void PostAdditionalParam() {
+    void PostAdditionalParam() {
         File json = new File("./src/test/java/JSONFiles/AddParamBody.json");
         given()
                 .spec(Specifications.authCred())

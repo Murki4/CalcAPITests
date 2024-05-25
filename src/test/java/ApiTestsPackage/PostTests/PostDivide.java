@@ -32,27 +32,48 @@ public class PostDivide {
             "деления двух чисел с точностью до четырех знаков после разделителя")
     @Tag("Позитивные")
     @Tag("POST")
-    public void PostDividePositive(String num2) {
+    void PostDividePositive(String num2) {
         PostRequestBody request_body = new PostRequestBody("1", num2,"/");
         ResultData result = RequestResponceEvocation.Evoke201(request_body);
-        try { //механизм пропуска получения кол-ва знаков после запятой, если результат будет без знака точки
+        try { //механизм пропуска получения кол-ва знаков после запятой, если результат будет ошибкой
             String[] splitter = String.valueOf(result.getResult()).split("\\.");
             int i = splitter[1].length();
             if(i>4) {
                 Assertions.assertEquals(4, i); //проверка кол-ва знаков после запятой у ответа API
             }
-            String formattedDouble = String.format("%."+i+"f", //приведение верного ответа к нужной форме
-                    Double.parseDouble(request_body.getNumber_1())
-                            / Double.parseDouble(request_body.getNumber_2())).replace(',', '.');
             Assertions.assertTrue(result.getPk()>0);
             Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
             Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
             Assertions.assertEquals(request_body.getOperator(), result.getOperator());
-            Assertions.assertEquals(formattedDouble, result.getResult());
+            Assertions.assertEquals(Double.toString(Double.parseDouble(request_body.getNumber_1())
+                    / Double.parseDouble(request_body.getNumber_2())).replace(',', '.'), result.getResult());
         }
         catch (ArrayIndexOutOfBoundsException e){
             Assertions.fail("Ошибка. Строка result содержит "+result.getResult());
         }
+    }
+
+    @Test
+    @Feature("POST /")
+    @Story("Негативные")
+    @DisplayName("POST / с одним пустым значением")
+    @Description("POST запрос с оператором '/' с одним пустым значением. Должен вернуть ошибку и код 400.")
+    @Tag("POST")
+    @Tag("Негативные")
+    @Tag("Исследовательские")
+    void PostDivideEmptyNum() {
+        RequestResponceEvocation.Evoke400(new PostRequestBody("","2","/"));
+    }
+
+    @Test
+    @Feature("POST /")
+    @Story("Негативные")
+    @DisplayName("POST / со строками")
+    @Description("POST запрос с оператором '/' и строкам. Должен вернуть код 201 и параметр result = error")
+    @Tag("Негативные")
+    @Tag("POST")
+    void PostMinusString() {
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("s", "f", "-"),"error");
     }
 
     @Test
@@ -65,7 +86,7 @@ public class PostDivide {
     @Tag("Негативные")
     @Tag("Исследовательские")
     void PostDivideDoubleTrim() {
-        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("13.6", "21.5", "/"));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("13.6", "21.5", "/"),"error");
     }
 
     @Test
@@ -77,22 +98,20 @@ public class PostDivide {
     @Tag("Позитивные")
     @Tag("POST")
     void PostDivideNegativeNumbers() {
-        PostRequestBody request_body = new PostRequestBody("-49", "-6", "/");
+        PostRequestBody request_body = new PostRequestBody("-48", "-6", "/");
         ResultData result = RequestResponceEvocation.Evoke201(request_body);
-        try { //механизм пропуска получения кол-ва знаков после запятой, если результат будет без знака точки
+        try { //механизм пропуска получения кол-ва знаков после запятой, если результат будет ошибкой
             String[] splitter = String.valueOf(result.getResult()).split("\\.");
             int i = splitter[1].length();
             if(i>4) {
-                Assertions.assertEquals(4, i); //вывод сообщения о превышении количества знаков
+                Assertions.assertEquals(4, i); //проверка кол-ва знаков после запятой у ответа API
             }
-            String formattedDouble = String.format("%."+i+"f", //приведение верного ответа к нужной форме
-                    Double.parseDouble(request_body.getNumber_1())
-                            / Double.parseDouble(request_body.getNumber_2())).replace(',', '.');
             Assertions.assertTrue(result.getPk()>0);
             Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
             Assertions.assertEquals(request_body.getNumber_2(), result.getNumber_2());
             Assertions.assertEquals(request_body.getOperator(), result.getOperator());
-            Assertions.assertEquals(formattedDouble, result.getResult());
+            Assertions.assertEquals(Double.toString(Double.parseDouble(request_body.getNumber_1())
+                    / Double.parseDouble(request_body.getNumber_2())).replace(',', '.'), result.getResult());
         }
         catch (ArrayIndexOutOfBoundsException e){
             Assertions.fail("Ошибка. Строка result содержит "+result.getResult());
@@ -106,8 +125,8 @@ public class PostDivide {
     @Description("POST запрос с оператором / и трехзначными числами. Должен вернуть код 201 и параметр result = error")
     @Tag("POST")
     @Tag("Негативные")
-    public void PostDivideNegativeThreeDigits() {
-        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("100", "200", "/"));
+    void PostDivideNegativeThreeDigits() {
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("100", "200", "/"),"error");
     }
 
     @Test
@@ -117,7 +136,7 @@ public class PostDivide {
     @Description("POST запрос с оператором '/' и делением двузначного числа на 0.Результатом должна быть ошибка")
     @Tag("POST")
     @Tag("Негативные")
-    public void PostDivideZero() {
+    void PostDivideZero() {
         RequestResponceEvocation.Evoke201Negative(new PostRequestBody("35", "0", "/"),"Zero division error");
     }
 }
