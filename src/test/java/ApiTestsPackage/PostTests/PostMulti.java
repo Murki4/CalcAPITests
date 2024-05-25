@@ -9,6 +9,8 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static io.restassured.RestAssured.given;
 
@@ -23,7 +25,7 @@ public class PostMulti {
     static void DeleteEntries() { //удаление тестовых данных из БД;
         RequestResponceEvocation.EvokeDeletion();
     }
-    @RepeatedTest(5)
+    @Test
     @Feature("POST *")
     @Story("Позитивные")
     @DisplayName("POST * с двузначными числами")
@@ -31,7 +33,7 @@ public class PostMulti {
             "умножения двух чисел")
     @Tag("Позитивные")
     @Tag("POST")
-    public void PostMultiPositive() {
+    void PostMultiPositive() {
         PostRequestBody request_body = new PostRequestBody("*");
         ResultData result = RequestResponceEvocation.Evoke201(request_body);
         Assertions.assertTrue(result.getPk()>0);
@@ -42,6 +44,17 @@ public class PostMulti {
                 Double.toString(Double.parseDouble(request_body.getNumber_1()) * Double.parseDouble(request_body.getNumber_2())),
                 result.getResult());
     }
+    @Test
+    @Feature("POST *")
+    @Story("Негативные")
+    @DisplayName("POST * с одним пустым значением")
+    @Description("POST запрос с оператором '*' с одним пустым значением. Должен вернуть ошибку и код 400.")
+    @Tag("POST")
+    @Tag("Негативные")
+    @Tag("Исследовательские")
+    void PostMultiEmptyNum() {
+        RequestResponceEvocation.Evoke400(new PostRequestBody("","2","*"));
+    }
 
     @Test
     @Feature("POST *")
@@ -50,8 +63,8 @@ public class PostMulti {
     @Description("POST запрос с оператором '*' и строкам. Должен вернуть код 201 и параметр result = error")
     @Tag("Негативные")
     @Tag("POST")
-    public void PostMultiString() {
-        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("s", "s", "*"));
+    void PostMultiString() {
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("s", "s", "*"),"error");
     }
 
     @Test
@@ -64,7 +77,7 @@ public class PostMulti {
     @Tag("Негативные")
     @Tag("Исследовательские")
     void PostMultiDoubleTrim() {
-        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("13.6", "21.5", "*"));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("13.6", "21.5", "*"),"error");
     }
 
     @Test
@@ -94,7 +107,7 @@ public class PostMulti {
     @Description("POST запрос с оператором * и трехзначными числами. Должен вернуть код 201 и параметр result = error")
     @Tag("POST")
     @Tag("Негативные")
-    public void PostMultiNegativeThreeDigits() {
-        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("100", "200", "*"));
+    void PostMultiNegativeThreeDigits() {
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("100", "200", "*"),"error");
     }
 }

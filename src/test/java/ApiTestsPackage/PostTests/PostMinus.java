@@ -21,7 +21,7 @@ public class PostMinus {
     static void DeleteEntries() { //удаление тестовых данных из БД;
         RequestResponceEvocation.EvokeDeletion();
     }
-    @RepeatedTest(5)
+    @Test
     @Feature("POST -")
     @Story("Позитивные")
     @DisplayName("POST - с двузначными числами")
@@ -29,7 +29,7 @@ public class PostMinus {
             "вычитания двух чисел")
     @Tag("Позитивные")
     @Tag("POST")
-    public void PostMinusPositive() {
+    void PostMinusPositive() {
         PostRequestBody request_body = new PostRequestBody("-");
         ResultData result = RequestResponceEvocation.Evoke201(request_body);
         Assertions.assertTrue(result.getPk()>0);
@@ -44,12 +44,24 @@ public class PostMinus {
     @Test
     @Feature("POST -")
     @Story("Негативные")
+    @DisplayName("POST + с одним пустым значением")
+    @Description("POST запрос с оператором '-' с одним пустым значением. Должен вернуть ошибку и код 400.")
+    @Tag("POST")
+    @Tag("Негативные")
+    @Tag("Исследовательские")
+    void PostMinusEmptyNum() {
+        RequestResponceEvocation.Evoke400(new PostRequestBody("","2","-"));
+    }
+
+    @Test
+    @Feature("POST -")
+    @Story("Негативные")
     @DisplayName("POST - со строками")
     @Description("POST запрос с оператором '-' и строкам. Должен вернуть код 201 и параметр result = error")
     @Tag("Негативные")
     @Tag("POST")
-    public void PostMinusString() {
-        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("s", "s", "-"));
+    void PostMinusString() {
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("s", "f", "-"),"error");
 
     }
 
@@ -63,7 +75,7 @@ public class PostMinus {
     @Tag("Негативные")
     @Tag("Исследовательские")
     void PostMinusDoubleTrim() {
-        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("13.6", "21.5", "-"));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("13.6", "21.5", "-"),"error");
     }
 
     @Test
@@ -93,7 +105,7 @@ public class PostMinus {
     @Description("POST запрос с оператором - и трехзначными числами. Должен вернуть код 201 и параметр result = error")
     @Tag("POST")
     @Tag("Негативные")
-    public void PostMinusThreeDigits() {
-        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("100", "20", "-"));
+    void PostMinusThreeDigits() {
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("100", "203", "-"),"error");
     }
 }

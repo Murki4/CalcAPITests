@@ -17,8 +17,8 @@ import static io.restassured.RestAssured.given;
 @DisplayName("Операции с id")
 public class IdTest {
     private static Integer idlist;
-    @BeforeEach
-    void InstallSpecAndMakeTestEntry(){ //установка стандартных спецификаций и создание набора данных для теста
+    @BeforeAll
+    static void InstallSpec(){ //создание записи в бд и получение ее номера
         Specifications.Install(Specifications.requestSpec());
         IdTest.idlist = given()
                 .spec(Specifications.authCred())
@@ -28,9 +28,8 @@ public class IdTest {
                 .then().log().all()
                 .extract().path("pk");
     }
-
-    @AfterEach
-    void DeleteEntries() { //удаление тестовых данных из БД;
+    @AfterAll
+    static void DeleteEntries() { //удаление тестовых данных из БД;
         RequestResponceEvocation.EvokeDeletion();
     }
 
@@ -41,7 +40,7 @@ public class IdTest {
             "Возращает информацию о записи")
     @Tag("GET")
     @Tag("Позитивный")
-    public void GetId(){
+    void GetId(){
         ResultData result = given()
                 .spec(Specifications.authCred())
                 .when()
@@ -61,12 +60,12 @@ public class IdTest {
     @Test
     @Flaky
     @Feature("Негативный")
-    @DisplayName("GET Id")
+    @DisplayName("GET Id negative")
     @Description("GET запрос с параметром 'id', где id это номер не существующей записи в БД. " +
             "Возращает код 404 и ошибку 'id not found or incorrect data'")
     @Tag("GET")
     @Tag("Негативный")
-    public void GetIdNegative(){
+    void GetIdNegative(){
         given()
                 .spec(Specifications.authCred())
                 .when()
@@ -74,8 +73,8 @@ public class IdTest {
                 .then().log().all()
                 .assertThat().statusCode(404)
                 .body("error", equalTo("id not found or incorrect data"));
-
     }
+
     @Test
     @Feature("Позитивный")
     @DisplayName("DELETE Id")
@@ -83,11 +82,11 @@ public class IdTest {
             "Должен вернуть код 200 и сообщение об удалении")
     @Tag("GET")
     @Tag("Позитивный")
-    public void DeleteId(){
+    void DeleteId(){
         given()
                 .spec(Specifications.authCred())
                 .when()
-                .delete(Integer.toString(IdTest.idlist))
+                .delete(IdTest.idlist +"/")
                 .then().log().all()
                 .assertThat().statusCode(200)
                 .body("message",equalTo("operation "+ IdTest.idlist + " is deleted"));
@@ -102,16 +101,16 @@ public class IdTest {
 
     @Test
     @Feature("Негативный")
-    @DisplayName("DELETE Id")
+    @DisplayName("DELETE Id negative")
     @Description("DELETE запрос с параметром 'id', где id это номер не существующей записи в БД. " +
             "Должен вернуть код 404 и ошибку 'id not found or incorrect data'")
     @Tag("DELETE")
     @Tag("Негативный")
-    public void DeleteIdNegative(){
+    void DeleteIdNegative(){
         given()
                 .spec(Specifications.authCred())
                 .when()
-                .delete("1/")
+                .delete(IdTest.idlist + 10 + "/")
                 .then().log().all()
                 .assertThat().statusCode(404)
                 .body("error", equalTo("id not found or incorrect data"));

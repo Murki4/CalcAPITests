@@ -22,6 +22,8 @@ public class Specifications{
     public static void Install(RequestSpecification request){
         RestAssured.requestSpecification = request;
     }
+
+    //не получается добавить способ аутентификации в билдер (не смог пока разобраться в чем дело), добавляю руками в каждый запрос
     public static RequestSpecification authCred(){
         return RestAssured.given().auth().preemptive().basic("sys0b1_5", "ymJ-q7z-7N2-SZz");
     }

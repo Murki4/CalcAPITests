@@ -19,7 +19,7 @@ import static io.restassured.RestAssured.given;
 @DisplayName("GET запросы с параметром operator")
 public class GetOperatorTests {
     @BeforeAll
-    static void InstallSpecAndMakeEntries() {
+    static void InstallSpecAndMakeEntries() { //создание тестового набора данных
         Specifications.Install(Specifications.requestSpec());
         String[] opers = {"+", "-", "*", "/", "="};
         for (String oper : opers)
@@ -41,10 +41,10 @@ public class GetOperatorTests {
     @Test
     @Feature("Позитивные")
     @DisplayName("GET пустой")
-    @Description("GET запрос без параметров. Должен вернуть код 200 и список 10 опаераций пользователя")
+    @Description("GET запрос без параметров. Должен вернуть код 200 и список 10 операций пользователя")
     @Tag("Позитивные")
     @Tag("GET")
-    public void GetEmpty() {
+    void GetEmpty() {
         List<ResultData> entries = given()
                 .spec(Specifications.authCred())
                 .when()
@@ -66,19 +66,20 @@ public class GetOperatorTests {
 
     @Test
     @Feature("Негативные")
-    @DisplayName("GET operator")
+    @DisplayName("GET operator пустой")
     @Description("GET запрос с параметром operators без указания значения. " +
-            "Должен вернуть код 400 и error = not supported operator")
+            "Должен отфильтровать неверный оператор и вернуть стандартный пустой GET запрос и код 200")
     @Tag("Негативные")
     @Tag("GET")
-    public void OperatorsEmpty() {
-        given()
+    void OperatorsEmpty() {
+        List<ResultData> entries = given()
                 .spec(Specifications.authCred())
                 .when()
                 .get("?operator=")
                 .then().log().all()
-                .statusCode(400)
-                .body("error", equalTo("not supported operator"));
+                .statusCode(200)
+                .extract().body().jsonPath().getList("",ResultData.class);
+        Assertions.assertEquals(10,entries.size());
     }
 
     @ParameterizedTest
@@ -89,7 +90,7 @@ public class GetOperatorTests {
             "Должен вернуть код 200 и список операций с данным оператором")
     @Tag("Позитивные")
     @Tag("GET")
-    public void OperatorsSome(String oper) {
+    void OperatorsSome(String oper) {
         List<ResultData> entries = given()
                 .spec(Specifications.authCred())
                 .urlEncodingEnabled(false)
@@ -101,6 +102,7 @@ public class GetOperatorTests {
         if (oper.equals("%3D")) {
             oper = "=";
         }
+        Assertions.assertNotNull(entries);
         for (ResultData entry : entries) {
             Assertions.assertNotEquals("", entry.getNumber_1());
             Assertions.assertNotEquals("", entry.getNumber_2());
@@ -116,7 +118,7 @@ public class GetOperatorTests {
             "Должен вернуть код 400 и ошибку error = not supported operator")
     @Tag("Негативные")
     @Tag("GET")
-    public void OperatorNegative() {
+    void OperatorNegative() {
         given()
                 .spec(Specifications.authCred())
                 .when()
@@ -124,5 +126,22 @@ public class GetOperatorTests {
                 .then().log().all()
                 .statusCode(400)
                 .body("error", equalTo("not supported operator"));
+    }
+
+    @Test
+    @Feature("Ограничения")
+    @DisplayName("Get некорректный оператор")
+    @Description("GET запрос с некорректным оператором. " +
+            "Должен отфильтровать неверный оператор и вернуть стандартный пустой GET запрос и код 200")
+    @Tag("Позитивный")
+    @Tag("Исследовательский")
+    void GetRequestWithInvalidParam(){
+        given()
+                .spec(Specifications.authCred())
+                .when()
+                .get("?random=")
+                .then()
+                .log().all()
+                .assertThat().statusCode(200);
     }
 }

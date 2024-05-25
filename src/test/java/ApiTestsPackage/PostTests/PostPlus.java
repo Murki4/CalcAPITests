@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static io.restassured.RestAssured.given;
 
 @Epic("POST запросы")
-@DisplayName("POST -")
+@DisplayName("POST +")
 public class PostPlus {
     @BeforeAll
     static void InstallSpec() { //стандартные спецификации
@@ -24,7 +24,7 @@ public class PostPlus {
         RequestResponceEvocation.EvokeDeletion();
     }
 
-    @RepeatedTest(5)
+    @Test()
     @Feature("POST +")
     @Story("Позитивные")
     @DisplayName("POST + с двузначными целыми числами")
@@ -32,7 +32,7 @@ public class PostPlus {
             "сложения двух чисел")
     @Tag("Позитивные")
     @Tag("POST")
-    public void PostPlusPositive() {
+    void PostPlusPositive() {
         PostRequestBody request_body = new PostRequestBody("+");
         ResultData result = RequestResponceEvocation.Evoke201(request_body);
         Assertions.assertTrue(result.getPk()>0);
@@ -43,6 +43,17 @@ public class PostPlus {
                 Double.toString(Double.parseDouble(request_body.getNumber_1()) + Double.parseDouble(request_body.getNumber_2())),
                 result.getResult());
     }
+    @Test
+    @Feature("POST +")
+    @Story("Негативные")
+    @DisplayName("POST + с одним пустым значением")
+    @Description("POST запрос с оператором '+' с одним пустым значением. Должен вернуть ошибку и код 400.")
+    @Tag("POST")
+    @Tag("Негативные")
+    @Tag("Исследовательские")
+    void PostPlusEmptyNum() {
+        RequestResponceEvocation.Evoke400(new PostRequestBody("","2","+"));
+    }
 
     @Test
     @Feature("POST +")
@@ -51,21 +62,20 @@ public class PostPlus {
     @Description("POST запрос с оператором '+' и строкам. Должен вернуть код 201 и параметр result = error ")
     @Tag("Негативные")
     @Tag("POST")
-    public void PostPlusString() {
-        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("s", "s", "+"));
+    void PostPlusString() {
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("s", "s", "+"),"error");
     }
 
     @Test
     @Feature("POST +")
     @Story("Негативные")
-    @DisplayName("POST + c числами с плаваюющей точкой, %%.%")
+    @DisplayName("POST + числа с плаваюющей точкой, %%.%")
     @Description("POST запрос с оператором '+' и двумя числами с плавающей точкой, " +
             "где после точки одна цифра. Должен вернуть код 201 и параметр result = error")
     @Tag("POST")
     @Tag("Негативные")
-    @Tag("Исследовательские")
     void PostPlusDoubleTrim() {
-        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("25.6", "22.5", "+"));
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("25.6", "22.5", "+"),"error");
     }
 
     @Test
@@ -76,7 +86,7 @@ public class PostPlus {
     @Tag("Позитивные")
     @Description("POST с оператором '+' и двумя отрицательными числами." +
             "Результатом должен быть верный результат сложения двух чисел.")
-    public void PostPlusNegativeNumbersTwoDigits() {
+    void PostPlusNegativeNumbersTwoDigits() {
         PostRequestBody request_body = new PostRequestBody("-17", "-29", "+");
         ResultData result = RequestResponceEvocation.Evoke201(request_body);
         Assertions.assertTrue(result.getPk()>0);
@@ -95,18 +105,18 @@ public class PostPlus {
     @Description("POST запрос с оператором + и трехзначными числами. Должен вернуть код 201 и параметр result = error")
     @Tag("POST")
     @Tag("Негативные")
-    public void PostPlusThreeDigits() {
-        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("100", "209", "+"));
+    void PostPlusThreeDigits() {
+        RequestResponceEvocation.Evoke201Negative(new PostRequestBody("100", "209", "+"),"error");
     }
 
     @ParameterizedTest
     @Feature("POST +")
     @ValueSource(strings = {"1","11"})
-    @Story("Позитивные?")
+    @Story("Позитивные")
     @DisplayName("POST 1+1, 1+11")
-    @Description("POST запрос с выражением  Должно вернуть код 201 и результат 2")
-    public void PostPlusOne(String num1){
-        PostRequestBody request_body = new PostRequestBody(num1,"1","+");
+    @Description("POST запрос со сложением 1 и 11. В первом случае должно вернуть 2, во втором 12")
+    void PostPlusOne(String num2){
+        PostRequestBody request_body = new PostRequestBody("1",num2,"+");
         ResultData result = RequestResponceEvocation.Evoke201(request_body);
         Assertions.assertTrue(result.getPk()>0);
         Assertions.assertEquals(request_body.getNumber_1(), result.getNumber_1());
