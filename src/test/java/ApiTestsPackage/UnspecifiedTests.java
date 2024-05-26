@@ -118,7 +118,7 @@ public class UnspecifiedTests {
                 .then()
                 .log().all()
                 .assertThat().statusCode(200)
-                .extract().body().toString();
+                .extract().body().jsonPath().get("").toString();
         Allure.addAttachment("Options", l);
     }
 
