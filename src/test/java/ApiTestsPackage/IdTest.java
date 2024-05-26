@@ -17,8 +17,8 @@ import static io.restassured.RestAssured.given;
 @DisplayName("Операции с id")
 public class IdTest {
     private static Integer idlist;
-    @BeforeAll
-    static void InstallSpec(){ //создание записи в бд и получение ее номера
+    @BeforeEach
+    void InstallSpec(){ //создание записи в бд и получение ее номера
         Specifications.Install(Specifications.requestSpec());
         IdTest.idlist = given()
                 .spec(Specifications.authCred())
@@ -28,8 +28,8 @@ public class IdTest {
                 .then().log().all()
                 .extract().path("pk");
     }
-    @AfterAll
-    static void DeleteEntries() { //удаление тестовых данных из БД;
+    @AfterEach
+    void DeleteEntries() { //удаление тестовых данных из БД;
         RequestResponceEvocation.EvokeDeletion();
     }
 
